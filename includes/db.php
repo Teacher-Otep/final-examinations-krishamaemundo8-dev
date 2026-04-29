@@ -1,25 +1,28 @@
 <?php
-$host = '127.0.0.1'; 
-$db   = 'cc111smsdb';  //sukatan yo dytoy jay nagan ti database yo
-$user = 'root';        //
-$pass = '';            //
-$port = '3308';        //nu nagusar kayo sabali nga port sukatan yo metlang dytoy
-$charset = 'utf8mb4';
+$host     = 'localhost';
+$username = 'root';
+$password = '';
+$dbname   = 'dbstudents';
 
+$conn = new mysqli($host, $username, $password);
 
-$dsn = "mysql:host=$host;port=$port;dbname=$db;charset=$charset";
-
-$options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES   => false,
-];
-
-try {
-     $pdo = new PDO($dsn, $user, $pass, $options);
-
-} catch (\PDOException $e) {
-
-     die("Connection failed: " . $e->getMessage());
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
+
+$conn->query("CREATE DATABASE IF NOT EXISTS `$dbname` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci");
+
+$conn->select_db($dbname);
+
+$tableQuery = "CREATE TABLE IF NOT EXISTS `students` (
+    `id`             int(11)       NOT NULL AUTO_INCREMENT,
+    `name`           varchar(100)  NOT NULL,
+    `surname`        varchar(100)  NOT NULL,
+    `middlename`     varchar(100)  DEFAULT NULL,
+    `address`        text          DEFAULT NULL,
+    `contact_number` varchar(20)   DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+
+$conn->query($tableQuery);
 ?>
